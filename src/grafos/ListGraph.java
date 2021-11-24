@@ -66,11 +66,6 @@ public class ListGraph extends Graph {
 
 	@Override
 	public Iterator<Edge> getAdjacentsIterator(int node) {
-		/*
-		 * List<Edge> adyacents = new LinkedList<Edge>(); for (int i = 0; i <
-		 * graph.length; i++) { Double cost = getEdge(node, i); if(cost != null) {
-		 * adyacents.add(new Edge(i, cost)); } } return adyacents.iterator();
-		 */
 		return graph[node].iterator();
 	}
 	// Misc
@@ -121,39 +116,6 @@ public class ListGraph extends Graph {
 	// Getters & setters
 
 	// Algoritmos
-	@Override
-	public Double[] dijsktra(int nodoSalida) {
-		PriorityQueue<Pair> pq = new PriorityQueue<Pair>();
-		
-		boolean[] visited = new boolean[graph.length];
-		Integer[] predecesores = new Integer[graph.length];
-		Double[] d = new Double[graph.length];
-
-		Arrays.fill(d, Double.POSITIVE_INFINITY);
-		Arrays.fill(visited, false);
-		Arrays.fill(predecesores, null);
-
-		d[nodoSalida] = 0.0;
-		pq.add(new Pair(nodoSalida, 0.0));
-
-		while (!pq.isEmpty()) {
-			Pair u = pq.poll();
-			visited[u.getNodo()] = true;
-
-			// Para cada adyacente de u
-			for (int i = 0; i < graph[u.getNodo()].size(); i++) {
-				Integer v = graph[u.getNodo()].get(i).getTo();
-				if (!visited[v] && d[v] > d[u.getNodo()] + graph[u.getNodo()].get(i).getCost()) {
-					d[v] = d[u.getNodo()] + graph[u.getNodo()].get(i).getCost();
-					predecesores[v] = u.getNodo();
-					pq.add(new Pair(v, d[v]));
-				}
-			}
-		}
-
-		return d;
-	}
-
 	@Override
 	public Integer[] dijkstraPath(int nodoSalida) {
 		boolean[] visited = new boolean[graph.length];

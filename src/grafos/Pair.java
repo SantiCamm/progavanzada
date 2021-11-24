@@ -3,6 +3,7 @@ package grafos;
 public class Pair implements Comparable<Pair>{
 	private int nodo;
 	private Double costo;
+	
 	public Pair (int nodo, Double costo) {
 		this.nodo = nodo;
 		this.costo = costo;

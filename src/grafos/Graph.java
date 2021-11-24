@@ -1,9 +1,11 @@
 package grafos;
 
 import java.util.Iterator;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Stack;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 
 public abstract class Graph {
 	// Getters & setters
@@ -31,12 +33,46 @@ public abstract class Graph {
 	// Misc
 
 	// Algoritmos
-	public abstract Double[] dijsktra(int nodoSalida);
+	public Double[] dijsktra(int nodoSalida) {
+		PriorityQueue<Pair> pq = new PriorityQueue<Pair>();
+
+		boolean[] visited = new boolean[getNodes()];
+		Integer[] predecesores = new Integer[getNodes()];
+		Double[] d = new Double[getNodes()];
+
+		Arrays.fill(d, Double.POSITIVE_INFINITY);
+		Arrays.fill(visited, false);
+		Arrays.fill(predecesores, null);
+
+		d[nodoSalida] = 0.0;
+		pq.add(new Pair(nodoSalida, 0.0));
+
+		while (!pq.isEmpty()) {
+			Pair u = pq.poll();
+			Integer w = u.getNodo();
+			
+			visited[w] = true;
+
+			Iterator<Edge> adjacents = getAdjacentsIterator(u.getNodo());
+			while (adjacents.hasNext()) {
+				Edge e = adjacents.next();
+				Integer v = e.getTo();
+
+				if (!visited[v] && d[v] > d[w] + e.getCost()) {
+					d[v] = d[w] + e.getCost();
+					predecesores[v] = w;
+					pq.add(new Pair(v, d[v]));
+				}
+			}
+		}
+
+		return d;
+	}
 
 	public abstract Integer[] dijkstraPath(int nodoSalida);
-	
+
 	public abstract Graph prim(int nodoSalida);
-	
+
 	public Double[][] floyd() {
 
 		Double[][] d = getCostMatrix();
@@ -49,7 +85,7 @@ public abstract class Graph {
 				}
 			}
 		}
-		
+
 		return d;
 	}
 
@@ -62,7 +98,7 @@ public abstract class Graph {
 				e[i][j] = costMatrix[i][j] != Double.POSITIVE_INFINITY;
 			}
 		}
-		
+
 		for (int k = 0; k < getNodes(); k++) {
 			for (int i = 0; i < getNodes(); i++) {
 				for (int j = 0; j < getNodes(); j++) {
@@ -70,14 +106,14 @@ public abstract class Graph {
 				}
 			}
 		}
-		
+
 		return e;
 	}
 
 	public void printDijkstra(Double[] d) {
 		System.out.println("Nodo \t\t Minima distancia desde origen");
 		for (int i = 0; i < d.length; i++) {
-			System.out.println((i+1) + "\t\t\t" + d[i]);
+			System.out.println((i + 1) + "\t\t\t" + d[i]);
 		}
 		System.out.println();
 	}
@@ -115,9 +151,11 @@ public abstract class Graph {
 			Iterator<Edge> adjacents = getAdjacentsIterator(current);
 			while (adjacents.hasNext()) {
 				Edge e = adjacents.next();
-				if (!visited[e.getTo()]) {
-					visited[e.getTo()] = true;
-					stack.push(e.getTo());
+				Integer v = e.getTo();
+
+				if (!visited[v]) {
+					visited[v] = true;
+					stack.push(v);
 				}
 			}
 		}
@@ -135,9 +173,11 @@ public abstract class Graph {
 			Iterator<Edge> adjacents = getAdjacentsIterator(current);
 			while (adjacents.hasNext()) {
 				Edge e = adjacents.next();
-				if (hoops[e.getTo()] == null) {
-					hoops[e.getTo()] = hoops[current] + 1;
-					queue.add(e.getTo());
+				Integer v = e.getTo();
+				
+				if (hoops[v] == null) {
+					hoops[v] = hoops[current] + 1;
+					queue.add(v);
 				}
 			}
 		}

@@ -12,11 +12,11 @@ public class MatrixGraph extends Graph {
 		graph = new Double[size][size];
 		emptyGraph();
 	}
-	
+
 	// Misc
-	
+
 	@Override
-	public Double[][] getCostMatrix(){
+	public Double[][] getCostMatrix() {
 		Double[][] f = new Double[graph.length][graph.length];
 
 		for (int i = 0; i < f.length; i++) {
@@ -30,7 +30,7 @@ public class MatrixGraph extends Graph {
 
 		return f;
 	}
-	
+
 	public void printGraph() {
 		for (int i = 0; i < graph.length; i++) {
 			for (int j = 0; j < graph[i].length; j++) {
@@ -51,11 +51,14 @@ public class MatrixGraph extends Graph {
 
 	@Override
 	public Iterator<Edge> getAdjacentsIterator(int node) {
-		ArrayList<Edge> adyacents = new ArrayList<Edge>();
-			for (int j = 0; j < graph[node].length; j++) {
-				adyacents.add(new Edge(node, j, graph[node][j]));
+		ArrayList<Edge> adj = new ArrayList<Edge>();
+		for (int i = 0; i < graph[node].length; i++) {
+			if(graph[node][i] != Double.POSITIVE_INFINITY) {
+				adj.add(new Edge(node, i, graph[node][i]));	
 			}
-		return adyacents.iterator();
+		}
+
+		return adj.iterator();
 	}
 	// Misc
 
@@ -71,37 +74,6 @@ public class MatrixGraph extends Graph {
 		}
 
 		return nodo;
-	}
-
-	@Override
-	public Double[] dijsktra(int nodoSalida) {
-		// validarNodo(nodoSalida);
-
-		boolean[] visitados = new boolean[graph.length];
-		Integer[] predecesores = new Integer[graph.length];
-		Double[] d = new Double[graph.length];
-
-		Arrays.fill(d, Double.POSITIVE_INFINITY);
-		Arrays.fill(visitados, false);
-		Arrays.fill(predecesores, null);
-
-		d[nodoSalida] = 0.0;
-
-		for (int i = 0; i < graph.length - 1; i++) {
-			int w = buscarMenorNodo(d, visitados);
-			visitados[w] = true;
-
-			// Para cada adyacente de w
-			for (int v = 0; v < graph.length; v++) {
-				if (visitados[v] == false && graph[w][v] != Double.POSITIVE_INFINITY && d[w] != Double.POSITIVE_INFINITY
-						&& d[v] > d[w] + graph[w][v]) {
-					d[v] = d[w] + graph[w][v];
-					predecesores[v] = w;
-				}
-			}
-		}
-
-		return d;
 	}
 
 	@Override
@@ -134,7 +106,7 @@ public class MatrixGraph extends Graph {
 
 		return predecesores;
 	}
-	
+
 	public Graph prim(int nodoSalida) {
 		return null;
 	}
@@ -156,7 +128,7 @@ public class MatrixGraph extends Graph {
 	public void setEdge(int from, int to, double cost) {
 		graph[from][to] = cost;
 	}
-	
+
 	@Override
 	public void setEdge(int from, int to) {
 		graph[from][to] = Double.POSITIVE_INFINITY;
@@ -211,7 +183,7 @@ public class MatrixGraph extends Graph {
 		g2.printGraph();
 
 		Double floyd[][] = g2.floyd();
-		
+
 		System.out.println("MATRIZ DE MENORES COSTOS");
 		for (int i = 0; i < g2.getNodes(); i++) {
 			for (int j = 0; j < g2.getNodes(); j++) {
@@ -220,9 +192,9 @@ public class MatrixGraph extends Graph {
 			System.out.println();
 		}
 		System.out.println();
-		
+
 		boolean warshall[][] = g2.warshall();
-		
+
 		System.out.println("MATRIZ DE CAMINOS POSIBLES");
 		for (int i = 0; i < g2.getNodes(); i++) {
 			for (int j = 0; j < g2.getNodes(); j++) {
@@ -231,7 +203,7 @@ public class MatrixGraph extends Graph {
 			System.out.println();
 		}
 		System.out.println();
-		
+
 	}
 
 }

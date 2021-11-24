@@ -2,6 +2,7 @@ package grafos;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.PriorityQueue;
 
 public class ListUnidirectionalGraph extends ListGraph {
@@ -52,27 +53,31 @@ public class ListUnidirectionalGraph extends ListGraph {
 		visitado[nodoSalida] = true;
 		int cont = 1;
 
-		// Voy sacando de la cola de prioridad los nodos visitados
-		// El ultimo que saque sera el menor
 		while (cont < visitado.length) {
 
+			// Voy sacando de la cola de prioridad los nodos visitados
+			// El ultimo que saque sera el menor
 			Edge e;
 			do {
 				e = edges.poll();
 			} while (visitado[e.getTo()]);
 
+			Integer v = e.getTo();
+			
 			// Marco el nodo como visitado
-			visitado[e.getTo()] = true;
+			visitado[v] = true;
 
 			// Guardo la arista
 			prim.setEdge(e.getFrom(), e.getTo(), e.getCost());
 
-			// Para cada adyacente no visitado, agrego las aristas a la cola de prioridad
-			for (int i = 0; i < graph[nodoSalida].size(); i++) {
-				if (visitado[graph[e.getTo()].get(i).getTo()] == false) {
-					edges.add(graph[e.getTo()].get(i));
+			Iterator<Edge> adj = getAdjacentsIterator(v);
+			while(adj.hasNext()) {
+				Edge a = adj.next();
+				if(!visitado[a.getTo()]) {
+					edges.add(a);
 				}
 			}
+			
 			cont++;
 			costo += e.getCost();
 		}
@@ -106,15 +111,22 @@ public class ListUnidirectionalGraph extends ListGraph {
 		 * System.out.println(); } System.out.println();
 		 */
 
-		/*
-		 * Graph g = new ListUnidirectionalGraph(6); g.setEdge(0, 2, 1); g.setEdge(0, 1,
-		 * 6); g.setEdge(0, 3, 5); g.setEdge(1, 4, 3); g.setEdge(2, 1, 6); g.setEdge(2,
-		 * 3, 4); g.setEdge(2, 4, 6); g.setEdge(2, 5, 6); g.setEdge(3, 5, 2);
-		 * g.setEdge(4, 5, 6);
-		 * 
-		 * // g.printGraph();
-		 * 
-		 * Graph primGraph = g.prim(0); primGraph.printGraph();
-		 */
+		Graph g = new ListUnidirectionalGraph(6);
+		g.setEdge(0, 2, 1);
+		g.setEdge(0, 1, 6);
+		g.setEdge(0, 3, 5);
+		g.setEdge(1, 4, 3);
+		g.setEdge(2, 1, 6);
+		g.setEdge(2, 3, 4);
+		g.setEdge(2, 4, 6);
+		g.setEdge(2, 5, 6);
+		g.setEdge(3, 5, 2);
+		g.setEdge(4, 5, 6);
+
+		// g.printGraph();
+
+		Graph primGraph = g.prim(0);
+		primGraph.printGraph();
+
 	}
 }
