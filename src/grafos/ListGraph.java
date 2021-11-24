@@ -28,29 +28,22 @@ public class ListGraph extends Graph {
 	@Override
 	public Double[][] getCostMatrix() {
 		Double[][] d = new Double[graph.length][graph.length];
-		for (int i = 0; i < graph.length; i++) {
-			for (int j = 0; j < graph.length; j++) {
-				d[i][j] = Double.POSITIVE_INFINITY;
+
+		for (int i = 0; i < d.length; i++) {
+			for (int j = 0; j < d[i].length; j++) {
+				if (i == j) {
+					d[i][j] = 0.0;
+				} else {
+					d[i][j] = Double.POSITIVE_INFINITY;
+				}
 			}
 		}
 
 		for (int i = 0; i < graph.length; i++) {
 			for (int j = 0; j < graph[i].size(); j++) {
-				if (i == j) {
-					d[i][j] = 0.0;
-				}
-
 				d[i][graph[i].get(j).getTo()] = graph[i].get(j).getCost();
 			}
 		}
-
-		/*
-		 * for (int i = 0; i < graph.length; i++) { for (int j = 0; j < graph.length;
-		 * j++) {
-		 * 
-		 * System.out.print(d[i][j] + " "); ; } System.out.println(); }
-		 */
-
 		return d;
 	}
 
